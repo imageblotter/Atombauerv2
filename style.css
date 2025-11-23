@@ -231,6 +231,7 @@ h1 {
 /* Info Panel */
 .info-panel {
     display: flex;
+    width: 120px;
     flex-direction: column;
     gap: 2rem;
     align-items: center;
@@ -358,4 +359,5 @@ h1 {
 
 .hidden {
     display: none;
+
 }
