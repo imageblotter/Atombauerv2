@@ -119,27 +119,82 @@ function updateCounts() {
 
 // Drag and Drop Logic
 let draggedType = null;
+let touchGhost = null; // Ghost element for touch drag
 
-console.log("Proton source:", protonSource);
-console.log("Neutron source:", neutronSource);
-console.log("Electron source:", electronSource);
+// Helper: Handle Touch Start
+function handleTouchStart(e) {
+    e.preventDefault(); // Prevent scrolling
+    const source = e.target;
+
+    // Identify type
+    draggedType = source.classList.contains('proton') ? 'proton' :
+        source.classList.contains('neutron') ? 'neutron' : 'electron';
+
+    // Create Ghost
+    touchGhost = source.cloneNode(true);
+    touchGhost.style.position = 'absolute';
+    touchGhost.style.opacity = '0.8';
+    touchGhost.style.pointerEvents = 'none'; // Allow click-through for elementFromPoint
+    touchGhost.style.zIndex = '1000';
+    touchGhost.style.width = '60px'; // Ensure visibility
+    touchGhost.style.height = '60px';
+
+    // Initial position
+    const touch = e.touches[0];
+    touchGhost.style.left = `${touch.clientX - 30}px`;
+    touchGhost.style.top = `${touch.clientY - 30}px`;
+
+    document.body.appendChild(touchGhost);
+}
+
+// Helper: Handle Touch Move
+function handleTouchMove(e) {
+    e.preventDefault();
+    if (!touchGhost) return;
+
+    const touch = e.touches[0];
+    touchGhost.style.left = `${touch.clientX - 30}px`;
+    touchGhost.style.top = `${touch.clientY - 30}px`;
+}
+
+// Helper: Handle Touch End
+function handleTouchEnd(e) {
+    e.preventDefault();
+    if (!touchGhost) return;
+
+    // Find drop target
+    const touch = e.changedTouches[0];
+    touchGhost.style.display = 'none'; // Hide to check element below
+    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+    touchGhost.style.display = 'block'; // Restore if needed (though we remove it)
+
+    if (elementBelow) {
+        const isNucleus = elementBelow.closest('.nucleus') || elementBelow.id === 'nucleus-drop-zone';
+        const isAtom = elementBelow.closest('.atom-container') || elementBelow.id === 'atom-drop-zone';
+
+        if (isNucleus && (draggedType === 'proton' || draggedType === 'neutron')) {
+            addParticle(draggedType, 'nucleus');
+        } else if (isAtom && draggedType === 'electron') {
+            // Calculate relative position for manual placement
+            const atomRect = atomDropZone.getBoundingClientRect();
+            const x = touch.clientX - atomRect.left;
+            const y = touch.clientY - atomRect.top;
+            addParticle(draggedType, 'shell', x, y);
+        }
+    }
+
+    // Cleanup
+    if (touchGhost) {
+        touchGhost.remove();
+        touchGhost = null;
+    }
+    draggedType = null;
+}
 
 [protonSource, neutronSource, electronSource].forEach(source => {
     if (!source) return;
 
-    // Drag Start
-    source.addEventListener('dragstart', (e) => {
-        console.log("Drag start", e.target);
-        draggedType = e.target.classList.contains('proton') ? 'proton' :
-            e.target.classList.contains('neutron') ? 'neutron' : 'electron';
-        console.log("Dragged type:", draggedType);
-        if (e.dataTransfer) {
-            e.dataTransfer.setData('text/plain', draggedType);
-            e.dataTransfer.effectAllowed = 'copy';
-        }
-    });
-
-    // Click to Add (Fallback & Accessibility)
+    // Mouse Events
     source.addEventListener('click', (e) => {
         console.log("Source clicked", e.currentTarget);
         const target = e.currentTarget;
@@ -162,6 +217,22 @@ console.log("Electron source:", electronSource);
             addParticle(type, 'shell', x, y);
         }
     });
+
+    // Drag Start
+    source.addEventListener('dragstart', (e) => {
+        draggedType = e.target.classList.contains('proton') ? 'proton' :
+            e.target.classList.contains('neutron') ? 'neutron' : 'electron';
+        console.log("Dragged type:", draggedType);
+        if (e.dataTransfer) {
+            e.dataTransfer.setData('text/plain', draggedType);
+            e.dataTransfer.effectAllowed = 'copy';
+        }
+    });
+
+    // Touch Events
+    source.addEventListener('touchstart', handleTouchStart, { passive: false });
+    source.addEventListener('touchmove', handleTouchMove, { passive: false });
+    source.addEventListener('touchend', handleTouchEnd);
 });
 
 // Helper to handle dragover
