@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baue ein Atom</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Baue ein Atom</h1>
+        </header>
+
+        <div class="game-area">
+            <!-- Left Panel: Particle Sources -->
+            <div class="particle-sources">
+                <div class="source-container">
+                    <div id="proton-source" class="particle proton" draggable="true">P+</div>
+                    <span>Protonen</span>
+                </div>
+                <div class="source-container">
+                    <div id="neutron-source" class="particle neutron" draggable="true">N</div>
+                    <span>Neutronen</span>
+                </div>
+                <div class="source-container">
+                    <div id="electron-source" class="particle electron" draggable="true">e-</div>
+                    <span>Elektronen</span>
+                </div>
+
+                <div class="counts-display">
+                    <p>Protonen: <span id="proton-count">0</span></p>
+                    <p>Neutronen: <span id="neutron-count">0</span></p>
+                    <p>Elektronen: <span id="electron-count">0</span></p>
+                </div>
+            </div>
+
+            <!-- Center: Atom Drop Zone -->
+            <div class="atom-container" id="atom-drop-zone">
+                <div class="shells-container">
+                    <div class="shell shell-4"></div>
+                    <div class="shell shell-3"></div>
+                    <div class="shell shell-2"></div>
+                    <div class="shell shell-1"></div>
+                </div>
+                <div class="nucleus" id="nucleus-drop-zone">
+                    <!-- Protons and Neutrons go here -->
+                </div>
+            </div>
+
+            <!-- Right Panel: Info & Controls -->
+            <div class="info-panel">
+                <h2>Zielelement</h2>
+                <div class="element-card">
+                    <span class="mass-number" id="target-mass">1</span>
+                    <span class="atomic-number" id="target-atomic">1</span>
+                    <span class="symbol" id="target-symbol">H</span>
+                </div>
+                <div class="element-name" id="target-name">Wasserstoff</div>
+
+                <div class="controls">
+                    <button id="check-btn" class="btn primary">Antwort prüfen</button>
+                    <button id="reset-btn" class="btn secondary">Nächstes Atom</button>
+                    <button id="fullscreen-btn" class="btn secondary">Vollbild</button>
+                </div>
+
+                <div id="feedback-message" class="feedback hidden"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
