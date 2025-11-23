@@ -34,13 +34,13 @@ const elements = [
     { atomicNumber: 11, symbol: 'Na', name: 'Natrium', mass: 23 },
     { atomicNumber: 12, symbol: 'Mg', name: 'Magnesium', mass: 24 },
     { atomicNumber: 13, symbol: 'Al', name: 'Aluminium', mass: 27 },
-    { atomicNumber: 14, symbol: 'Si', name: 'Silicium', mass: 28 },
+    { atomicNumber: 14, symbol: 'Si', name: 'Silizium', mass: 28 },
     { atomicNumber: 15, symbol: 'P', name: 'Phosphor', mass: 31 },
     { atomicNumber: 16, symbol: 'S', name: 'Schwefel', mass: 32 },
     { atomicNumber: 17, symbol: 'Cl', name: 'Chlor', mass: 35 },
     { atomicNumber: 18, symbol: 'Ar', name: 'Argon', mass: 40 },
     { atomicNumber: 19, symbol: 'K', name: 'Kalium', mass: 39 },
-    { atomicNumber: 20, symbol: 'Ca', name: 'Calcium', mass: 40 }
+    { atomicNumber: 20, symbol: 'Ca', name: 'Kalzium', mass: 40 }
 ];
 
 let currentElement = null;
@@ -527,4 +527,3 @@ resetBtn.addEventListener('click', initGame);
 
 // Initialize
 initGame();
-
